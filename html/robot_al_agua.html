@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        /* Estilos para el formulario */
+        #playerForm {
+            background-color: rgba(254, 46, 125, 0.7);
+            padding: 20px;
+            /* Ajusta el relleno según sea necesario */
+            border-radius: 10px;
+            /* Agrega bordes redondeados */
+        }
+
+        /* Estilos para el texto de jugador */
+        .jugador-text{
+            color: white !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container text-center mt-3">
+        <h1 class="flotante-automatico h1-blue-mode-mini">ROBOT AL AGUA</h1>
+    </div>
+
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-md-7">
+                <canvas id="gameCanvas" width="800" height="450" class="canvas"></canvas>
+                <button id="volumeIcon" onclick="toggleMute()">
+                    <img src="./svg/high.svg" alt="High Volume">
+                </button>
+                <input type="range" id="volumeSlider" min="0" max="100" step="1" value="100" style="width: 30%;"
+                    onchange="changeVolume()">
+            </div>
+            <div class="offset-md-2 col-md-3">
+                <form id="playerForm" class="mt-3">
+                    <div class="row">
+                        <div class="col-6">
+                            <h5 class="jugador-text">JUGADOR 1</h5>
+                            <div class="mb-2">
+                                <label for="player1Name" class="form-label">Nombre:</label>
+                                <input type="text" class="form-control" id="player1Name" value="Jugador1">
+                            </div>
+                            <div class="mb-2">
+                                <label for="player1Lives" class="form-label">Vidas:</label>
+                                <input type="number" class="form-control" id="player1Lives" min="1" max="5" value="1">
+                            </div>
+                            <div class="mb-2">
+                                <label for="player1Speed" class="form-label">Velocidad:</label>
+                                <select class="form-select" id="player1Speed">
+                                    <option value="Lenta">Lenta</option>
+                                    <option value="Media">Media</option>
+                                    <option value="Alta">Alta</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <h5 class="jugador-text">JUGADOR 2</h5>
+                            <div class="mb-2">
+                                <label for="player2Name" class="form-label">Nombre:</label>
+                                <input type="text" class="form-control" id="player2Name" value="Jugador2">
+                            </div>
+                            <div class="mb-2">
+                                <label for="player2Lives" class="form-label">Vidas:</label>
+                                <input type="number" class="form-control" id="player2Lives" min="1" max="5" value="1">
+                            </div>
+                            <div class="mb-2">
+                                <label for="player2Speed" class="form-label">Velocidad:</label>
+                                <select class="form-select" id="player2Speed">
+                                    <option value="Lenta">Lenta</option>
+                                    <option value="Media">Media</option>
+                                    <option value="Alta">Alta</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <button type="submit" id="playButton" class="btn btn-primary">PLAY</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- Agrega el elemento de audio con autoplay y loop -->
+    <audio id="audio" autoplay loop>
+        <source src="../audio/Take On Me - 8Bit.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script src="./js/robot_al_agua/robot_al_agua.js"></script>
+    <script>
+        var previousVolume = 50; // Valor por defecto si el volumen anterior es 0
+        var isMuted = false; // Estado del mute
+
+        // Función para cambiar el volumen del audio
+        function changeVolume() {
+            var audio = document.getElementById("audio");
+            var volumeSlider = document.getElementById("volumeSlider");
+            var volume = volumeSlider.value;
+
+            audio.volume = volume / 100;
+
+            // Actualizar el icono de volumen según el nivel
+            updateVolumeIcon(volume);
+
+            // Recordar el valor del volumen antes de activar el mute
+            if (isMuted && volume > 0) {
+                previousVolume = volume;
+                isMuted = false;
+            }
+        }
+
+        // Función para alternar el mute del audio
+        function toggleMute() {
+            var audio = document.getElementById("audio");
+            var volumeSlider = document.getElementById("volumeSlider");
+            var volumeIcon = document.getElementById("volumeIcon");
+
+            if (audio.volume === 0) {
+                // Desmutear
+                if (previousVolume === 0) {
+                    previousVolume = 50;
+                }
+                audio.volume = previousVolume / 100;
+                volumeSlider.value = previousVolume;
+                volumeIcon.innerHTML = "<img src='./svg/high.svg' alt='High Volume'>";
+                isMuted = false;
+            } else {
+                // Mutear
+                previousVolume = volumeSlider.value;
+                audio.volume = 0;
+                volumeSlider.value = 0;
+                volumeIcon.innerHTML = "<img src='./svg/mute.svg' alt='Mute'>";
+                isMuted = true;
+            }
+        }
+
+        // Función para actualizar el icono de volumen según el nivel
+        function updateVolumeIcon(volume) {
+            var volumeIcon = document.getElementById("volumeIcon");
+
+            if (volume == 0) {
+                volumeIcon.innerHTML = "<img src='./svg/mute.svg' alt='Mute'>";
+            } else if (volume > 0 && volume <= 50) {
+                volumeIcon.innerHTML = "<img src='./svg/low.svg' alt='Low Volume'>";
+            } else {
+                volumeIcon.innerHTML = "<img src='./svg/high.svg' alt='High Volume'>";
+            }
+        }
+    </script>
+
+
+
+    <script>
+        // Detiene el audio si se cierra la página
+        window.addEventListener('beforeunload', function () {
+            document.getElementById('audio').pause();
+        });
+    </script>
+</body>
+
+</html>

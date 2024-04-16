@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>RoboCuentos</title>
+</head>
+
+<body>
+    <div class="container text-center">
+        <h1 class="flotante-automatico">ROBO-CUENTOS</h1>
+        <h2 class="flotante-automatico">¡A disfrutar con estas súper historias!</h2>
+        <div class="row mt-5">
+            <!-- Video principal -->
+            <div class="col-12 col-md-8">
+                <div class="mainvid-container">
+                    <h2 class="mainvid-title"> RoboBebé</h2>
+                    <video id="mainVideo" src="./vid/RoboBebe.mp4" type="video/mp4" preload="metadata">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div id="progressContainer">
+                        <progress id="progressBar" value="0" max="100"></progress>
+                        <div id="controls">
+                            <button id="playPauseBtn" onclick="playPause()">
+                                <img src="./svg/play.svg" alt="Play">
+                            </button>
+                            <button id="stopBtn" onclick="stopVideo()">
+                                <img src="./svg/stop.svg" alt="Stop">
+                            </button>
+                            <button id="fastForwardBtn" onclick="fastForward()">
+                                <img src="./svg/10sec.svg" alt="Fast Forward">
+                            </button>
+                            <button id="fullscreenBtn" onclick="toggleFullscreen()">
+                                <img src="./svg/fullscreen.svg" alt="Fullscreen">
+                            </button>
+                            <div id="durationInfo">00:00 / 00:00</div>
+                            <button id="volumeIcon" onclick="toggleMute()">
+                                <img src="./svg/high.svg" alt="High Volume">
+                            </button>
+                            <input type="range" id="volumeSlider" min="0" max="100" step="1" value="100"
+                                onchange="changeVolume()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Miniaturas de videos -->
+            <div class="col-12 col-md-4">
+                <div class="vid-container">
+                    <ul class="list-group">
+
+                         <!-- Video ACTIVO -->
+            <a class="list-group-item list-group-item-action active" onclick="changeMainVideo(this)">
+                <img src="./img/RoboBebe.png" class="list-video" alt="El RoboBebé">
+                <h3 class="list-title">El RoboBebé</h3>
+            </a>
+            
+
+            <!-- Video 2 -->
+            <a class="list-group-item list-group-item-action" onclick="changeMainVideo(this)">
+                <img src="./img/RobotDesprog.png" class="list-video" alt="El Robot Desprogramado">
+                <h3 class="list-title">El Robot Desprogramado</h3>
+            </a>
+
+            <!-- Video 3 -->
+            <a class="list-group-item list-group-item-action" onclick="changeMainVideo(this)">
+                <img src="./img/RobotDif.png" class="list-video" alt="Un Robot Diferente">
+                <h3 class="list-title">Un Robot Diferente</h3>
+            </a>
+                        <!-- Agregar más miniaturas aquí -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/robocuentos.js"></script>
+</body>
+
+</html>

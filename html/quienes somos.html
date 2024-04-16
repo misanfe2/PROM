@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../leaflet/mapa.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+</head>
+<body class="body-blue-mode">
+        <div class="container text-center mt-5">
+            <h1 class="flotante-automatico h1-blue-mode">BIENVENIDO A ROBOT WORLD</h1>
+            <h2 class="form-container">Donde los niños pueden jugar, crear y personalizar sus propios robots en emocionantes minijuegos. Sumérgete en esta emocionante aventura robótica, únete a ROBOT WORLD ahora y descubre un mundo donde la imaginación y la tecnología se encuentran para crear experiencias inolvidables. ¡Diviértete, aprende y crea con nosotros en cada click!</h2>    
+            <a class="btn btn-primary boton" href="#" onclick="Cargar('./html/inicio.html','cuerpo')">¡ADELANTE!</a>
+        </div>
+        <div class="container">
+            <br>
+            <h2 class="text-center mb-4">No tengas miedo, pregúntanos</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <form class="form form-container">
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre</label> <input
+                                    type="text" class="form-control" id="nombre"
+                                    placeholder="Introduzca su nombre" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="apellidos" class="form-label">Apellidos</label> <input
+                                    type="text" class="form-control" id="apellidos"
+                                    placeholder="Introduzca sus apellidos" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="telefono" class="form-label">Teléfono</label> <input
+                                    type="tel" class="form-control" id="telefono"
+                                    placeholder="Introduzca su número de teléfono" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Correo electrónico</label> <input
+                                    type="email" class="form-control" id="email"
+                                    placeholder="Introduzca su correo electrónico" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="mensaje" class="form-label">¿En qué podemos
+                                    ayudarle?</label>
+                                <textarea class="form-control" id="mensaje" rows="3"
+                                    placeholder="Escriba su mensaje aquí" required></textarea>
+                            </div>
+                            <div class="text-center mb-3">
+                                <button type="submit" class="btn btn-primary">Enviar</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="map-info form-container">
+                            <h4 class="text-center mb-4">También puedes venir a visitarnos:)</h4>
+                            <div id="map"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   		integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   		crossorigin=""></script>   		
+	
+	<script src="../leaflet/mapa.js"></script>
+</body>
+</html>

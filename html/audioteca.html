@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROBOMUSIC</title>
+  <link rel="stylesheet" href="../css/juego_audio.css">  
+  <script>
+    var cuerpo = document.getElementById('cuerpaso');
+    
+  </script>
+</head>
+
+<body>
+  <div class="container text-center mt-md-5">
+    <h1 class="flotante-automatico">ROBOMUSIC</h1>
+    <h2 class="flotante-automatico">¡Menudo musikote para escuchar!</h2>
+      <div class="row mt-5">
+        <div class="col-md-6 mainvid-container">
+          <audio id ="audio" src="#" crossorigin="anonymous"></audio>
+          <img class="baile" id="baile" src="../img/baile.png" alt="robot bailando" autoplay="false">
+          <div id="controls">
+            <button id="playPauseBtn" onclick="playPause()">
+              <img src="../svg/play.svg" alt="Play">
+            </button>
+            <button id="stopBtn" onclick="stopAudio()">
+              <img src="../svg/stop.svg" alt="Stop">
+            </button>
+            <div>
+              <button id="volumeIcon" onclick="toggleMute()">
+                <img src="../svg/high.svg" alt="High Volume">
+              </button>
+              <input type="range" id="volumeSlider" min="0" max="100" step="1" value="100" onchange="changeVolume()">      
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mainvid-container">
+          <div class="row">
+            <select id="canciones" onchange="cambiarCancion()">
+              <option value="" disabled selected>Selecciona una canción</option>
+              <option value="../audio/Crazy Frog - Axel F (Official Video).mp3">Crazy Frog</option>
+              <option value="../audio/Daft Punk - Harder Better Faster Stronger (Official Video).mp3">Daft Punk - Daft Punk - Harder Better Faster Stronger</option>
+              <option value="../audio/Daft Punk - Robot Rock (Official Video).mp3">Daft Punk - Daft Punk - Robot Rock</option>
+              <option value="../audio/danza_kuduro.mp3">Danza Kuduro</option>
+            </select>
+          </div>
+          <div class="row info">
+            <h2>Nombre: </h2>
+            <p id="nombre"></p>
+            <h2>Duración total: </h2>
+            <p id="dur"></p>
+            <h2>Tiempo restante: </h2>
+            <p id="tiempo"></p>
+            <h2>Estado: </h2>
+            <p id="estado"></p>
+          </div>
+        </div>
+      </div>
+  </div>
+  <div class="fondo">
+    <div class="robots">
+      <img src="./img/altavoz.png" style="--i:15;"></img>
+      <img src="./img/auriculares.png" style="--i:28;"></img>
+      <img src="./img/clave_sol.png" style="--i:22;"></img>
+      <img src="./img/control_vol.png" style="--i:18;"></img>
+      <img src="./img/nota.png" style="--i:27;"></img>
+      <img src="./img/notas.png" style="--i:14;"></img>
+      <img src="./img/altavoz.png" style="--i:25;"></img>
+      <img src="./img/auriculares.png" style="--i:20;"></img>
+      <img src="./img/clave_sol.png" style="--i:30;"></img>
+      <img src="./img/control_vol.png" style="--i:12;"></img>
+      <img src="./img/nota.png" style="--i:17;"></img>
+      <img src="./img/notas.png" style="--i:26;"></img>
+      <img src="./img/altavoz.png" style="--i:13;"></img>
+      <img src="./img/auriculares.png" style="--i:21;"></img>
+      <img src="./img/clave_sol.png" style="--i:16;"></img>
+      <img src="./img/control_vol.png" style="--i:29;"></img>
+      <img src="./img/nota.png" style="--i:19;"></img>
+      <img src="./img/notas.png" style="--i:24;"></img>
+      <img src="./img/altavoz.png" style="--i:23;"></img>
+    </div>
+  </div>
+  <script src="../js/audio.js"></script>
+</body>
+
+</html>
