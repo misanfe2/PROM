@@ -17,7 +17,7 @@
         }
 
         /* Estilos para el texto de jugador */
-        .jugador-text{
+        .jugador-text {
             color: white !important;
         }
     </style>
@@ -87,28 +87,29 @@
         </div>
     </div>
 
-
-
-
-
     <!-- Agrega el elemento de audio con autoplay y loop -->
-    <audio id="audio" autoplay loop>
-        <source src="../audio/Take On Me - 8Bit.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
+    <audio id="miaudio" autoplay loop src="../audio/Take On Me - 8Bit.mp3"></audio>
 
     <script src="./js/robot_al_agua/robot_al_agua.js"></script>
+
     <script>
+        // Acceder al contexto de audio
+        var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        var gainNode = audioCtx.createGain(); // Crear nodo de ganancia
+        var track = audioCtx.createMediaElementSource(document.getElementById('miaudio')); // Obtener la pista de audio
+
+        // Conectar el nodo de ganancia al destino de audio
+        track.connect(gainNode).connect(audioCtx.destination);
+
         var previousVolume = 50; // Valor por defecto si el volumen anterior es 0
         var isMuted = false; // Estado del mute
 
         // Función para cambiar el volumen del audio
         function changeVolume() {
-            var audio = document.getElementById("audio");
             var volumeSlider = document.getElementById("volumeSlider");
             var volume = volumeSlider.value;
 
-            audio.volume = volume / 100;
+            gainNode.gain.value = volume / 100;
 
             // Actualizar el icono de volumen según el nivel
             updateVolumeIcon(volume);
@@ -122,23 +123,22 @@
 
         // Función para alternar el mute del audio
         function toggleMute() {
-            var audio = document.getElementById("audio");
             var volumeSlider = document.getElementById("volumeSlider");
             var volumeIcon = document.getElementById("volumeIcon");
 
-            if (audio.volume === 0) {
+            if (gainNode.gain.value === 0) {
                 // Desmutear
                 if (previousVolume === 0) {
                     previousVolume = 50;
                 }
-                audio.volume = previousVolume / 100;
+                gainNode.gain.value = previousVolume / 100;
                 volumeSlider.value = previousVolume;
                 volumeIcon.innerHTML = "<img src='./svg/high.svg' alt='High Volume'>";
                 isMuted = false;
             } else {
                 // Mutear
                 previousVolume = volumeSlider.value;
-                audio.volume = 0;
+                gainNode.gain.value = 0;
                 volumeSlider.value = 0;
                 volumeIcon.innerHTML = "<img src='./svg/mute.svg' alt='Mute'>";
                 isMuted = true;
@@ -157,14 +157,10 @@
                 volumeIcon.innerHTML = "<img src='./svg/high.svg' alt='High Volume'>";
             }
         }
-    </script>
 
-
-
-    <script>
         // Detiene el audio si se cierra la página
         window.addEventListener('beforeunload', function () {
-            document.getElementById('audio').pause();
+            document.getElementById('miaudio').pause();
         });
     </script>
 </body>

@@ -3,6 +3,21 @@
     var ctx = canvas.getContext('2d');
     var backgroundColor = 'rgb(0, 153, 255)';
 
+    // Crear contexto de audio
+    var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    // Crear StereoPannerNode para controlar la posición del sonido
+    var stereoPanner = audioCtx.createStereoPanner();
+    stereoPanner.pan.value = 1; // Inicialmente configurado a la derecha
+
+    // Cargar archivo de audio
+    var audioElement = new Audio('../audio/Muerte - 8Bit.mp3');
+    var audioSource = audioCtx.createMediaElementSource(audioElement);
+
+    // Conectar el StereoPannerNode al contexto de audio
+    audioSource.connect(stereoPanner);
+    stereoPanner.connect(audioCtx.destination);
+
     var textoVisible = true; // Variable para controlar la visibilidad del texto
 
     class Jugador {
@@ -32,7 +47,6 @@
         }
     }
 
-
     let barco = new Jugador(canvas.width / 4, canvas.height / 2, 154, 82, 3, 0, 0.1, 1, 0, 0);
     let tiburon = new Jugador((3 * canvas.width) / 4, canvas.height / 2, 102, 58, 3, 0, 0.1, 3, 0, null);
     let balls = [];
@@ -61,23 +75,30 @@
             button.textContent = 'Nueva Partida';
             gameover = 0; // Cambiar el valor del botón a -1
             for (var i = 0; i < inputs.length; i++) {
-                inputs[i].disabled = true; // Deshabilitar los inputs
+                if (inputs[i].id !== 'volumeSlider') { // Excluir el control de volumen
+                    inputs[i].disabled = true; // Deshabilitar los inputs
+                }
             }
             for (var i = 0; i < selects.length; i++) {
-                selects[i].disabled = true; // Deshabilitar los selects
+                if (selects[i].id !== 'volumeSlider') { // Excluir el control de volumen
+                    selects[i].disabled = true; // Deshabilitar los selects
+                }
             }
         } else {
             // Si el botón ya está en "Nueva Partida"
             button.textContent = 'PLAY';
             gameover = -1; // Cambiar el valor del botón a 0
             for (var i = 0; i < inputs.length; i++) {
-                inputs[i].disabled = false; // Habilitar los inputs
+                if (inputs[i].id !== 'volumeSlider') { // Excluir el control de volumen
+                    inputs[i].disabled = false; // Habilitar los inputs
+                }
             }
             for (var i = 0; i < selects.length; i++) {
-                selects[i].disabled = false; // Habilitar los selects
+                if (selects[i].id !== 'volumeSlider') { // Excluir el control de volumen
+                    selects[i].disabled = false; // Habilitar los selects
+                }
             }
         }
-
 
         // Obtener valores del formulario
         const player1Lives = parseInt(document.getElementById('player1Lives').value);
@@ -144,8 +165,8 @@
     function keyDownHandler(event) {
         // Manejar eventos de teclado
         keysPressed[event.key] = true;
-        // Evitar la propagación del evento si la tecla presionada es el espacio
-        if (event.key === ' ') {
+        // Evitar la propagación del evento si la tecla presionada es:
+        if (event.key === ' ' || event.key === 'ArrowUp' || event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
             event.preventDefault();
         }
         parpadeoInicio = false;
@@ -180,6 +201,19 @@
         }, 50);
     }
 
+    // Comprobar si uno de los jugadores ha muerto
+    function comprobarMuerte() {
+        if (barco.vida <= 0) {
+            // Reproducir sonido de muerte del jugador 1
+            stereoPanner.pan.value = -1; // Reproducir por la izquierda
+            audioElement.play();
+        } else if (tiburon.vida <= 0) {
+            // Reproducir sonido de muerte del jugador 2
+            stereoPanner.pan.value = 1; // Reproducir por la derecha
+            audioElement.play();
+        }
+    }
+
     // Define una función para reiniciar las posiciones de los jugadores
     function reiniciarPosiciones() {
         parpadeoInicio = true;
@@ -193,7 +227,10 @@
         tiburon.y = canvas.height / 2;
         tiburon.rotacion = 0;
 
+        comprobarMuerte();
+
         reiniciarBolas();
+
     }
 
     function reiniciarBolas() {
@@ -281,7 +318,7 @@
         }
 
         if (gameover > 0) {
-            // Dibujar Game Over y ganador
+
             dibujarTextoGameOver();
         }
 
@@ -358,22 +395,22 @@
             ballFrameIndex = 0;
         }
 
-        balls.forEach(ball => {
+        for (let i = 0; i < balls.length; i++) {
+            let ball = balls[i];
+            
             // Actualizamos posiciones de las bolas
             ball.x += Math.cos(ball.direccion) * ball.velocidad;
             ball.y += Math.sin(ball.direccion) * ball.velocidad;
-
-            // Comprobamos colision de cada bola con el tiburón
-            if (ball.x < tiburon.x + tiburon.anchura &&
-                ball.x + ball.ancho > tiburon.x &&
-                ball.y < tiburon.y + tiburon.altura &&
-                ball.y + ball.largo > tiburon.y) {
+        
+            // Comprobamos colisión de cada bola con el tiburón
+            if (ball.x + ball.ancho >= tiburon.x && ball.x <= tiburon.x + tiburon.anchura &&
+                ball.y + ball.largo >= tiburon.y && ball.y <= tiburon.y + tiburon.altura) {
                 ball.x = -1;
                 ball.y = -1;
                 tiburon.vida--;
                 reiniciarPosiciones();
             }
-        });
+        }
 
         // Eliminar bolas que salgan de las coordenadas del canvas y restar 1 al contador de bolas
         balls = balls.filter(ball => {
@@ -445,11 +482,6 @@
         }
     }
 
-    function distancia(x1, y1, x2, y2) {
-        // Calcular la distancia entre dos puntos utilizando el teorema de Pitagoras
-        return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-    }
-
     function comprobarLimitesJugador(jugador) {
         if (jugador.x < jugador.altura / 2) jugador.x = jugador.altura / 2;
         if (jugador.x > canvas.width - jugador.altura / 2) jugador.x = canvas.width - jugador.altura / 2;
@@ -485,7 +517,6 @@
             ctx.restore(); // Restaurar el estado del contexto
         }
     }
-
 
     const keysPressed = {};
 

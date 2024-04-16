@@ -19,24 +19,12 @@ var volumeIcon = document.getElementById("volumeIcon");
 var isMuted = false;
 var previousVolume;
 
-var nombreElemento = document.getElementById("nombre");
-var estadoElemento = document.getElementById("estado");
+function init(){
+    audioCtx = new AudioContext();
+    track = audioCtx.createMediaElementSource(audio);
 
-
-// Función para inicializar el reproductor de audio y configurar los eventos asociados
-function initializeAudioPlayer() {
-
-    // Restablecer el estado del reproductor de audio
-    
-
-    // Asignar eventos al reproductor de audio
-    
-
-   
+    track.connect(audioCtx.destination);
 }
-
-// Llamar a la función de inicialización del reproductor de video al cargar la página
-initializeAudioPlayer();
 
 function playPause(){
     if(select.selectedIndex !== 0){
