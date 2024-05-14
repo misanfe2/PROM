@@ -3,13 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+  <style>
+    .bar:hover {
+      fill: steelblue; /* Cambiar el color a sólido al pasar el cursor */
+      stroke: black; /* Agregar borde negro */
+      stroke-width: 2px; /* Grosor del borde */
+    }
+  </style>
     <title>Document</title>
 </head>
 <body>
     <div class="container text-center mt-md-5 mt-3">
         <h1 class="flotante-automatico">CREA TU PROPIO ROBOT</h1>
-          <h2>¿Estás listx?</h2>
-          <a class="btn btn-primary boton" href="#" onclick="Cargar('./html/index.html','cuerpo')">¡ADELANTE!</a>
+          <h2>Quién nos visita? Mira las estadísticas, únete a la comunidad!</h2>
+          <!--<a class="btn btn-primary boton" href="#" onclick="Cargar('./html/index.html','cuerpo')">¡ADELANTE!</a> <!-->
+          <div id="chart"></div>
+
       </div>
       <div class="fondo">
         <div class="robots">
@@ -34,5 +44,120 @@
           <img src="./img/robo_emoji.png" style="--i:23;"></img>
         </div>
       </div>
+      <script>
+        // Configuración del gráfico
+        const margin = { top: 30, right: 30, bottom: 70, left: 60 };
+        const width = 800 - margin.left - margin.right;
+        const height = 400 - margin.top - margin.bottom;
+    
+        // Crear el lienzo SVG
+        const svg = d3.select("#chart")
+                      .append("svg")
+                        .attr("width", width + margin.left + margin.right + 180) // Aumentar el ancho para incluir el cuadrado
+                        .attr("height", height + margin.top + margin.bottom)
+                      .append("g")
+                        .attr("transform", `translate(${margin.left}, ${margin.top})`);
+    
+        // Cargar los datos desde datos.json
+        d3.json("../D3/datos.json").then(function(data) {
+          // Escalar los datos
+          const x = d3.scaleBand()
+                      .domain(data.map(d => d.mes))
+                      .range([0, width])
+                      .padding(0.1);
+    
+          const y = d3.scaleLinear()
+                      .domain([0, d3.max(data, d => d.visitas)])
+                      .range([height, 0]);
+    
+          // Crear ejes
+          const xAxis = d3.axisBottom(x);
+          const yAxis = d3.axisLeft(y);
+    
+          svg.append("g")
+              .attr("transform", `translate(0, ${height})`)
+              .call(xAxis)
+              .selectAll("text")
+                .attr("transform", "rotate(-45)")
+                .style("text-anchor", "end");
+    
+          svg.append("g")
+              .call(yAxis);
+    
+          // Crear barras
+          svg.selectAll("rect")
+              .data(data)
+              .enter()
+              .append("rect")
+                .attr("x", d => x(d.mes))
+                .attr("y", d => y(d.visitas))
+                .attr("width", x.bandwidth())
+                .attr("height", d => height - y(d.visitas))
+                .attr("rx", 5) // Redondear la esquina superior izquierda
+                .attr("ry", 5) // Redondear la esquina superior derecha
+                .attr("fill", d => {
+                  if (d.visitas < 2500) {
+                    return "rgba(255, 0, 0)"; // Rojo transparente
+                  } else if (d.visitas >= 2500 && d.visitas < 4200) {
+                    return "rgba(255, 255, 0)"; // Amarillo transparente
+                  } else {
+                    return "rgba(0, 255, 0)"; // Verde transparente
+                  }
+                })
+                .attr("class", "bar") // Añadir clase "bar" a todas las barras
+                .append("title") // Añadir tooltip con información adicional
+                  .text(d => `Mes: ${d.mes}\nVisitas: ${d.visitas}`);
+    
+          // Cuadrado de leyenda
+          const legendSquareSize = 20;
+          const legendX = width + margin.left + 20;
+          const legendY = margin.top + 20;
+    
+          // Rectángulo rojo
+          svg.append("rect")
+              .attr("x", legendX)
+              .attr("y", legendY)
+              .attr("width", legendSquareSize)
+              .attr("height", legendSquareSize)
+              .attr("fill", "rgba(255, 0, 0)");
+    
+          // Texto MAL
+          svg.append("text")
+              .attr("x", legendX + legendSquareSize + 10)
+              .attr("y", legendY + legendSquareSize / 2)
+              .text("MAL")
+              .attr("alignment-baseline", "middle");
+    
+          // Rectángulo amarillo
+          svg.append("rect")
+              .attr("x", legendX)
+              .attr("y", legendY + 40)
+              .attr("width", legendSquareSize)
+              .attr("height", legendSquareSize)
+              .attr("fill", "rgba(255, 255, 0)");
+    
+          // Texto REGULAR
+          svg.append("text")
+              .attr("x", legendX + legendSquareSize + 10)
+              .attr("y", legendY + 40 + legendSquareSize / 2)
+              .text("REGULAR")
+              .attr("alignment-baseline", "middle");
+    
+          // Rectángulo verde
+          svg.append("rect")
+              .attr("x", legendX)
+              .attr("y", legendY + 80)
+              .attr("width", legendSquareSize)
+              .attr("height", legendSquareSize)
+              .attr("fill", "rgba(0, 255, 0)");
+    
+          // Texto MUY BIEN
+          svg.append("text")
+              .attr("x", legendX + legendSquareSize + 10)
+              .attr("y", legendY + 80 + legendSquareSize / 2)
+              .text("MUY BIEN")
+              .attr("alignment-baseline", "middle");
+        });
+      </script>
 </body>
 </html>
